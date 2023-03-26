@@ -1,7 +1,15 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+// @ts-ignore - Ignoring 'Cannot find module' - png file is there.
+import normalMap from '../static/textures/NormalMap.png'
 // import * as dat from 'dat.gui'
+
+// Loading
+const textureLoader = new THREE.TextureLoader()
+// TODO: We need to figure out how to use URI to point to the local file.
+// const normalTexture = textureLoader.load('data:img/png;base64,./../static/textures/NormalMap.png')
+const normalTexture = textureLoader.load(normalMap)
 
 // // Debug
 // const gui = new dat.GUI()
@@ -13,32 +21,21 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 // Objects
-const geometry = new THREE.TorusGeometry(0.7, 0.2, 16, 100)
-
-/**
- * Renderer
- */
-// const renderer = new THREE.WebGLRenderer({ antialias: true })
-const renderer = new THREE.WebGLRenderer({
-	canvas: canvas,
-})
+const geometry = new THREE.SphereGeometry(0.5, 64, 64)
 
 // Materials
 
-const material = new THREE.MeshBasicMaterial()
-material.color = new THREE.Color(0xff0000)
+const material = new THREE.MeshStandardMaterial()
+material.metalness = 0.7
+material.roughness = 0.2
+
+material.normalMap = normalTexture
+
+material.color = new THREE.Color(0x292929)
 
 // Mesh
 const sphere = new THREE.Mesh(geometry, material)
 scene.add(sphere)
-
-/**
- * Sizes
- */
-const sizes = {
-	width: window.innerWidth,
-	height: window.innerHeight,
-}
 
 // Lights
 
@@ -47,6 +44,14 @@ pointLight.position.x = 2
 pointLight.position.y = 3
 pointLight.position.z = 4
 scene.add(pointLight)
+
+/**
+ * Sizes
+ */
+const sizes = {
+	width: window.innerWidth,
+	height: window.innerHeight,
+}
 
 window.addEventListener('resize', () => {
 	// Update sizes
@@ -76,6 +81,13 @@ scene.add(camera)
 // const controls = new OrbitControls(camera, canvas)
 // controls.enableDamping = true
 
+/**
+ * Renderer
+ */
+const renderer = new THREE.WebGLRenderer({
+	canvas: canvas,
+	alpha: true,
+})
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
