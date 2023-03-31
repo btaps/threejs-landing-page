@@ -9,7 +9,7 @@
 		"build:dev": "webpack --mode=development",
 		"build:prod": "webpack --mode=production --node-env=production",
 		"watch": "webpack --watch",
-		"serve": "webpack serve"
+		"dev": "webpack serve"
 	},
 	"repository": {
 		"type": "git",
@@ -22,6 +22,7 @@
 	},
 	"homepage": "https://github.com/btaps/threejs-landing-page#readme",
 	"devDependencies": {
+		"@types/dat.gui": "^0.7.9",
 		"@webpack-cli/generators": "^3.0.1",
 		"webpack": "^5.76.3",
 		"webpack-cli": "^5.0.1",
@@ -30,6 +31,7 @@
 	"dependencies": {
 		"@types/three": "^0.149.0",
 		"css-loader": "^6.7.3",
+		"dat.gui": "^0.7.9",
 		"html-webpack-plugin": "^5.5.0",
 		"mini-css-extract-plugin": "^2.7.5",
 		"style-loader": "^3.3.2",
