@@ -59,12 +59,12 @@ pointLight2.intensity = 10
 
 scene.add(pointLight2)
 
-// Add gui controls for lights
-const light1 = gui.addFolder('Light 1')
-light1.add(pointLight2.position, 'x', -3, 3, 0.1)
-light1.add(pointLight2.position, 'y', -6, 6, 0.1)
-light1.add(pointLight2.position, 'z', -3, 3, 0.1)
-light1.add(pointLight2, 'intensity', 0, 10, 0.1)
+// Add gui controls for lights. Only used in dev mode.
+// const light1 = gui.addFolder('Light 1')
+// light1.add(pointLight2.position, 'x', -3, 3, 0.1)
+// light1.add(pointLight2.position, 'y', -6, 6, 0.1)
+// light1.add(pointLight2.position, 'z', -3, 3, 0.1)
+// light1.add(pointLight2, 'intensity', 0, 10, 0.1)
 
 // PointLightHelper is used to show where the camera is looking at our objects. Only used in dev mode.
 // const pointLightHelper1 = new THREE.PointLightHelper(pointLight2, 1)
@@ -75,7 +75,7 @@ light1.add(pointLight2, 'intensity', 0, 10, 0.1)
 // 				Argument of type 'Vector3' is not assignable to parameter of type 'Record<string, unknown>'.
 //  				Index signature for type 'string' is missing in type 'Vector3'
 // TODO: Look into fixing above typescript error.
-const pointLight3 = new THREE.PointLight(0xFFA400, 2) as any
+const pointLight3 = new THREE.PointLight(0xFFA400, 2)
 
 // Set light position in one command set()
 pointLight3.position.set(1.6, -1.2, -0.5)
@@ -83,20 +83,20 @@ pointLight3.intensity = 5.6
 
 scene.add(pointLight3)
 
-// Add gui controls for lights
-const light2 = gui.addFolder('Light 2')
-light2.add(pointLight3.position, 'x', -3, 3, 0.1)
-light2.add(pointLight3.position, 'y', -6, 6, 0.1)
-light2.add(pointLight3.position, 'z', -3, 3, 0.1)
-light2.add(pointLight3, 'intensity', -0, 10, 0.1)
+// Add gui controls for lights. Only used in dev mode.
+// const light2 = gui.addFolder('Light 2')
+// light2.add(pointLight3.position, 'x', -3, 3, 0.1)
+// light2.add(pointLight3.position, 'y', -6, 6, 0.1)
+// light2.add(pointLight3.position, 'z', -3, 3, 0.1)
+// light2.add(pointLight3, 'intensity', -0, 10, 0.1)
 
-const light2Color = {
-	color: 0xff0000
-}
+// const light2Color = {
+// 	color: 0xff0000
+// }
 
-light2.addColor(light2Color, 'color').onChange(() => {
-	pointLight3.color.set(light2Color.color)
-})
+// light2.addColor(light2Color, 'color').onChange(() => {
+// 	pointLight3.color.set(light2Color.color)
+// })
 
 // PointLightHelper is used to show where the camera is looking at our objects. Only used in dev mode.
 // const pointLightHelper2 = new THREE.PointLightHelper(pointLight3, 1)
@@ -154,13 +154,45 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  * Animate
  */
 
+document.addEventListener('mousemove', onDocumentMouseMove)
+
+let mouseX = 0
+let mouseY = 0
+
+let targetX = 0
+let targetY = 0
+
+const windowHalfX = window.innerWidth / 2
+const windowHalfY = window.innerHeight / 2
+
+function onDocumentMouseMove(event: MouseEvent): void {
+	console.log('hi')
+	debugger
+	mouseX = (event.clientX - windowHalfX)
+	mouseY = (event.clientY - windowHalfY)
+}
+
+window.addEventListener('scroll', updateSphere)
+
+function updateSphere(evnet: MouseEvent):void {
+	sphere.position.y = window.scrollY * .001
+}
+
 const clock = new THREE.Clock()
 
 const tick = () => {
+	targetX = mouseX * 0.001
+	targetY = mouseY * 0.001
+
 	const elapsedTime = clock.getElapsedTime()
 
 	// Update objects
 	sphere.rotation.y = 0.5 * elapsedTime
+
+	// Moves sphere in relation to mouse on X, Y axis
+	sphere.rotation.y += 0.5 * (targetX - sphere.rotation.y)
+	sphere.rotation.x += 0.05 * (targetY - sphere.rotation.x)
+	sphere.position.z += -0.05 * (targetY - sphere.rotation.x)
 
 	// Update Orbital Controls
 	// controls.update()
